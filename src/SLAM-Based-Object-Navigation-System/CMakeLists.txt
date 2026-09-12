@@ -24,6 +24,7 @@ install (PROGRAMS
 
 install(DIRECTORY
   launch
+  rviz
   config
   docs
   DESTINATION share/${PROJECT_NAME}

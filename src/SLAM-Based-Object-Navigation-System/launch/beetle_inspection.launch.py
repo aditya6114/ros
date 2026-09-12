@@ -19,12 +19,15 @@ def generate_launch_description():
     serial_port = LaunchConfiguration("serial_port")
     model_path = LaunchConfiguration("model_path")
     run_perception = LaunchConfiguration("run_perception")
+    run_rviz = LaunchConfiguration("run_rviz")
     return LaunchDescription([
         DeclareLaunchArgument("serial_port", default_value="/dev/ttyACM0"),
         DeclareLaunchArgument("inspection_params", default_value=os.path.join(package_dir, "config", "inspection.yaml")),
         DeclareLaunchArgument("nav2_params", default_value=os.path.join(nav2_dir, "params", "nav2_params.yaml")),
         DeclareLaunchArgument("model_path", default_value=""),
         DeclareLaunchArgument("run_perception", default_value="false"),
+        DeclareLaunchArgument("run_rviz", default_value="true",
+                              description="Set false when running without a display."),
         Node(package="slam_based_nav", executable="beetle_serial_bridge.py", name="beetle_serial_bridge",
              parameters=[{"port": serial_port}], output="screen"),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(slam_dir, "launch", "online_async_launch.py")),
@@ -36,4 +39,7 @@ def generate_launch_description():
              condition=IfCondition(run_perception)),
         Node(package="slam_based_nav", executable="object_reacher.py", name="go_to_object_node", parameters=[params], output="screen"),
         Node(package="slam_based_nav", executable="explorer2.py", name="frontier_explorer", parameters=[params], output="screen"),
+        Node(package="rviz2", executable="rviz2",
+             arguments=["-d", os.path.join(package_dir, "rviz", "beetle_hardware.rviz")],
+             output="screen", condition=IfCondition(run_rviz)),
     ])
