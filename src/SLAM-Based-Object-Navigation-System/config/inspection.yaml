@@ -1,0 +1,41 @@
+object_mapper:
+  ros__parameters:
+    image_topic: /camera/image_raw
+    camera_info_topic: /camera/camera_info
+    scan_topic: /scan
+    map_frame: map
+    base_frame: base_link
+    camera_hfov_deg: 62.2
+    confidence: 0.8
+    max_range: 4.0
+    duplicate_radius: 1.0
+    confirmation_observations: 5
+    candidate_ttl_sec: 5.0
+    reset_database_on_start: false
+    skip_rate: 3
+    debug_view: false
+    target_classes: [damaged_box]
+    model_path: ""
+    database_path: ~/.ros/warehouse_inspection/detections.json
+
+go_to_object_node:
+  ros__parameters:
+    target_topic: /inspection/target
+    objects_topic: /detected_objects_data
+    exploration_complete_topic: /inspection/exploration_complete
+    map_frame: map
+    base_frame: base_link
+    stand_off_distance: 0.65
+    require_exploration_complete: true
+
+frontier_explorer:
+  ros__parameters:
+    map_frame: map
+    base_frame: base_link
+    # Reject near-zero movement goals produced by the initial SLAM map.
+    min_goal_distance: 1.0
+    skip_radius: 0.75
+    frontier_radius_check: 0.8
+    min_unexplored_fraction: 0.20
+    min_frontier_cluster_size: 5
+    empty_map_updates_before_complete: 3
